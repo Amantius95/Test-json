@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+    <head>
+        <script type="text/javascript">
+            async function loadFirst() {
+                const response = await fetch('first.json');
+                const data = await response.json();
+                const divFirst = document.getElementById('firstData');
+                
+                data.forEach((item, index) => {
+                    const paragraph = document.createElement('p');
+                    paragraph.className = 'inner';
+                    paragraph.id = `first-${index}`;
+                    paragraph.textContent = `${item.name}${item.x}`;
+                    divFirst.appendChild(paragraph);
+                });
+            }
+
+            async function loadSecond() {
+                const response = await fetch('second.json');
+                const data = await response.json();
+                const divSecond = document.getElementById('secondData');
+                
+                data.forEach((item, index) => {
+                    const paragraph = document.createElement('p');
+                    paragraph.className = 'inner';
+                    paragraph.id = `second-${index}`;
+                    paragraph.textContent = `${item.name}${item.x}`;
+                    divSecond.appendChild(paragraph);
+                });
+            }
+
+            async function loadThird() {
+                const response = await fetch('third.json');
+                const data = await response.json();
+                const divThird = document.getElementById('thirdData');
+                
+                data.forEach((item, index) => {
+                    const paragraph = document.createElement('p');
+                    paragraph.className = 'inner';
+                    paragraph.id = `third-${index}`;
+                    paragraph.textContent = `${item.name}${item.x}`;
+                    divThird.appendChild(paragraph);
+                });
+            }
+
+            async function loadAll() {
+                try {
+                    await Promise.all([
+                        loadFirst(),
+                        loadSecond(),
+                        loadThird()
+                    ]);
+                } catch (error) {
+                    console.error('Chyba pri načítaní dát:', error);
+                }
+            }
+        </script>
+    </head>
+    <body onload="loadAll()">
+        <div id="firstData">
+            <h2>Dáta z prvého súboru:</h2>
+        </div>
+        <div id="secondData">
+            <h2>Dáta z druhého súboru:</h2>
+        </div>
+        <div id="thirdData">
+            <h2>Dáta z tretieho súboru:</h2>
+        </div>
+    </body>
+</html>
