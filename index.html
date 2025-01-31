@@ -229,18 +229,31 @@
 			}
 
             async function loadSecond() {
-                const response = await fetch('second.json');
-                const data = await response.json();
-                const divSecond = document.getElementById('secondData');
-                
-                data.forEach((item, index) => {
-                    const paragraph = document.createElement('p');
-                    paragraph.className = 'inner';
-                    paragraph.id = `second-${index}`;
-                    paragraph.textContent = `${item.name}${item.x}`;
-                    divSecond.appendChild(paragraph);
-                });
-            }
+				try {
+					// Načítanie dát z third.json, aby sme získali hodnotu sever
+					const responseThird = await fetch('third.json');
+					const dataThird = await responseThird.json();
+					const sever = dataThird.mapBounds.sever;  // Získanie hodnoty sever
+
+					// Načítanie dát z second.json
+					const responseSecond = await fetch('second.json');
+					const dataSecond = await responseSecond.json();
+
+					const divSecond = document.getElementById('secondData');
+					
+					// Iterácia cez položky v second.json a vytvorenie odstavcov
+					dataSecond.forEach((item, index) => {
+						const paragraph = document.createElement('p');
+						paragraph.className = 'inner';
+						paragraph.id = `second-${index}`;
+						// Zobrazenie hodnoty sever namiesto `${item.name}${item.x}`
+						paragraph.textContent = `Sever: ${sever}`;  
+						divSecond.appendChild(paragraph);
+					});
+				} catch (error) {
+					console.error('Chyba pri načítaní dát:', error);
+				}
+			}
 
             async function loadThird() {
 				const response = await fetch('third.json');
