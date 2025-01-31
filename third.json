@@ -1,1 +1,8 @@
-[{"name": "Prvý", "x": 1}, {"name": "Druhý", "x": 2}]
+{
+    "mapBounds": {
+        "sever": 3,
+        "zapad": 6,
+        "juh": 6,
+        "vychod": 5
+    }
+}
