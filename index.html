@@ -306,28 +306,6 @@
 			
 			// Vytvorenie mapových dielov
 			const tiles = [];
-			for (let z = -sever; z < juh; z++) {
-				for (let x = -zapad; x < vychod; x++) {
-					const tile = document.createElement('div');
-					tile.className = 'map-tile';
-					
-					const tileX = x * 512;
-					const tileZ = z * 512;
-					
-					tile.dataset.x = tileX;
-					tile.dataset.z = tileZ;
-					
-					const img = document.createElement('img');
-					img.src = `Data/map_${x}_${z}.webp`;
-					img.alt = `Mapa ${x},${z}`;
-					img.loading = "lazy";
-					img.draggable = false;
-					tile.appendChild(img);
-					
-					mapGrid.appendChild(tile);
-					tiles.push(tile);
-				}
-			}
 			
 			const points = [
 				{ id: 'n1', name: 'Amantius', x: -1354, y: '',z: -4619, type: 'home'},
@@ -784,6 +762,32 @@
 				createTunnelLines();
 				createMapPoints();
 				updatePosition(currentX, currentZ);
+			}
+
+			function createMapTiles() {
+				const tiles = [];
+				for (let z = -sever; z < juh; z++) {
+					for (let x = -zapad; x < vychod; x++) {
+						const tile = document.createElement('div');
+						tile.className = 'map-tile';
+						
+						const tileX = x * 512;
+						const tileZ = z * 512;
+						
+						tile.dataset.x = tileX;
+						tile.dataset.z = tileZ;
+						
+						const img = document.createElement('img');
+						img.src = `Data/map_${x}_${z}.webp`;
+						img.alt = `Mapa ${x},${z}`;
+						img.loading = "lazy";
+						img.draggable = false;
+						tile.appendChild(img);
+						
+						mapGrid.appendChild(tile);
+						tiles.push(tile);
+					}
+				}
 			}
 			
 			searchInput.addEventListener('input', (e) => {
