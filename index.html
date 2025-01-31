@@ -219,11 +219,18 @@
 				const response = await fetch('third.json');
 				const data = await response.json();
 				
-				// Nastavenie hodnôt z načítaných dát
-				sever = data.mapBounds.sever;
-				zapad = data.mapBounds.zapad;
-				juh = data.mapBounds.juh;
-				vychod = data.mapBounds.vychod;
+				console.log('Načítané dáta z third.json:', data);
+				
+				if (data && data.mapBounds) {
+					sever = data.mapBounds.sever;
+					zapad = data.mapBounds.zapad;
+					juh = data.mapBounds.juh;
+					vychod = data.mapBounds.vychod;
+					
+					console.log('Map bounds po načítaní:', { sever, zapad, juh, vychod });  // Logovanie map bounds
+				} else {
+					console.error('Chyba: mapBounds nie sú definované v dátach');
+				}
 				
 				// Nastavenie počtu stĺpcov pre grid po načítaní hodnôt
 				document.documentElement.style.setProperty('--columns', vychod + zapad);
