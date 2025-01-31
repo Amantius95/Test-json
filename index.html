@@ -178,8 +178,35 @@
 			}
 			
 		</style>
-        <script type="text/javascript">
-            async function loadFirst() {
+    </head>
+    <body onload="loadAll()">
+        <div id="firstData">
+            <h2>Dáta z prvého súboru:</h2>
+        </div>
+        <div id="secondData">
+            <h2>Dáta z druhého súboru:</h2>
+        </div>
+        <div id="thirdData">
+            <h2>Dáta z tretieho súboru:</h2>
+        </div>
+		<div class="coordinates">
+			Pozícia: <span id="position">x: 0, z: 0</span><br>
+			Zoom: <span id="zoom-level">1.0</span>x
+			<div id="testData" class="test-data"></div>
+		</div>
+		
+		<div class="search-container">
+			<input type="text" id="searchInput" placeholder="Vyhľadať bod...">
+			<div id="searchResults" class="search-results"></div>
+		</div>
+
+		<div class="map-container" id="mapContainer">
+			<div class="map-grid" id="mapGrid"></div>
+		</div>
+
+		<script type="text/javascript">
+		
+			async function loadFirst() {
 				const response = await fetch('first.json');
 				const data = await response.json();
 				const divFirst = document.getElementById('firstData');
@@ -241,34 +268,7 @@
                     console.error('Chyba pri načítaní dát:', error);
                 }
             }
-        </script>
-    </head>
-    <body onload="loadAll()">
-        <div id="firstData">
-            <h2>Dáta z prvého súboru:</h2>
-        </div>
-        <div id="secondData">
-            <h2>Dáta z druhého súboru:</h2>
-        </div>
-        <div id="thirdData">
-            <h2>Dáta z tretieho súboru:</h2>
-        </div>
-		<div class="coordinates">
-			Pozícia: <span id="position">x: 0, z: 0</span><br>
-			Zoom: <span id="zoom-level">1.0</span>x
-			<div id="testData" class="test-data"></div>
-		</div>
 		
-		<div class="search-container">
-			<input type="text" id="searchInput" placeholder="Vyhľadať bod...">
-			<div id="searchResults" class="search-results"></div>
-		</div>
-
-		<div class="map-container" id="mapContainer">
-			<div class="map-grid" id="mapGrid"></div>
-		</div>
-
-		<script>
 			const mapContainer = document.getElementById('mapContainer');
 			const mapGrid = document.getElementById('mapGrid');
 			const positionDisplay = document.getElementById('position');
