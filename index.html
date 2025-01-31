@@ -1,6 +1,5 @@
-
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="sk">
     <head>
         <script type="text/javascript">
             async function loadFirst() {
@@ -8,58 +7,21 @@
 				const data = await response.json();
 				const divFirst = document.getElementById('firstData');
 				
-				// Pridáme štýly pre kontajner párov
-				const style = document.createElement('style');
-				style.textContent = `
-					.pairs-container {
-						display: flex;
-						flex-direction: column;
-						gap: 10px;
-					}
-					.point-pair {
-						display: flex;
-						gap: 20px;
-					}
-					.point {
-						padding: 5px;
-						border: 1px solid #ddd;
-						border-radius: 4px;
-					}
-				`;
-				document.head.appendChild(style);
-				
-				// Vytvoríme kontajner pre všetky páry
-				const pairsContainer = document.createElement('div');
-				pairsContainer.className = 'pairs-container';
-				
-				// Prechádzame dáta po dvojiciach
-				for(let i = 0; i < data.length; i += 2) {
-					// Vytvoríme kontajner pre pár
-					const pairDiv = document.createElement('div');
-					pairDiv.className = 'point-pair';
+				data.forEach((item, index) => {
+					const paragraph = document.createElement('p');
+					paragraph.className = 'inner';
 					
-					// Prvý bod v páre
-					const point1 = document.createElement('div');
-					point1.className = 'point';
-					point1.id = `a${Math.floor(i/2) + 1}`;
-					point1.textContent = `${data[i].name} ${data[i].x} ${data[i].y} ${data[i].z}`;
+					// Vypočítame číslo páru (1, 2, 3, ...) na základe indexu
+					const pairNumber = Math.floor(index / 2) + 1;
+					// Určíme či ide o prvý (a) alebo druhý (b) bod v páre
+					const pairLetter = index % 2 === 0 ? 'a' : 'b';
+					// Vytvoríme ID v požadovanom formáte (a1, b1, a2, b2, ...)
+					const customId = `${pairLetter}${pairNumber}`;
 					
-					pairDiv.appendChild(point1);
-					
-					// Druhý bod v páre (ak existuje)
-					if(i + 1 < data.length) {
-						const point2 = document.createElement('div');
-						point2.className = 'point';
-						point2.id = `b${Math.floor(i/2) + 1}`;
-						point2.textContent = `${data[i+1].name} ${data[i+1].x} ${data[i+1].y} ${data[i+1].z}`;
-						
-						pairDiv.appendChild(point2);
-					}
-					
-					pairsContainer.appendChild(pairDiv);
-				}
-				
-				divFirst.appendChild(pairsContainer);
+					paragraph.id = customId;
+					paragraph.textContent = `${item.name} ${item.x} ${item.y} ${item.z}`;
+					divFirst.appendChild(paragraph);
+				});
 			}
 
             async function loadSecond() {
