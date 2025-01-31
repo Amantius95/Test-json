@@ -259,24 +259,26 @@
 				const response = await fetch('third.json');
 				const data = await response.json();
 				
-				// Nastavenie hodnôt z načítaných dát
-				sever = data.mapBounds.sever;
-				zapad = data.mapBounds.zapad;
-				juh = data.mapBounds.juh;
-				vychod = data.mapBounds.vychod;
+				sever = parseInt(data.mapBounds.sever);
+				zapad = parseInt(data.mapBounds.zapad);
+				juh = parseInt(data.mapBounds.juh);
+				vychod = parseInt(data.mapBounds.vychod);
 			}
 
 
             async function loadAll() {
-                try {
-                    await Promise.all([
-                        loadFirst(),
-                        loadSecond()
-                    ]);
-                } catch (error) {
-                    console.error('Chyba pri načítaní dát:', error);
-                }
-            }
+				try {
+					await Promise.all([
+						loadFirst(),
+						loadSecond(),
+						loadThird()
+					]);
+					// Po načítaní všetkých dát inicializujte mapu
+					initializeMap();
+				} catch (error) {
+					console.error('Chyba pri načítaní dát:', error);
+				}
+			}
 		
 			const mapContainer = document.getElementById('mapContainer');
 			const mapGrid = document.getElementById('mapGrid');
@@ -301,8 +303,6 @@
 			let lineEndZ = -0;
 			let mapLines = [];
 			let activeConnections = [];
-			
-			loadThird()
 			
 			console.log(sever, zapad, juh, vychod);
 			document.documentElement.style.setProperty('--columns', vychod + zapad);
@@ -775,6 +775,44 @@
 				updatePointPositions();
 				updateLinePositions();
 				updateTunnelPositions();
+			}
+			
+			function initializeMap() {
+				console.log(sever, zapad, juh, vychod);
+				document.documentElement.style.setProperty('--columns', vychod + zapad);
+				
+				// Vytvorenie mapových dielov
+				createMapTiles();
+				createMapLines();
+				createTunnelLines();
+				createMapPoints();
+				updatePosition(currentX, currentZ);
+			}
+
+			function createMapTiles() {
+				const tiles = [];
+				for (let z = -sever; z < juh; z++) {
+					for (let x = -zapad; x < vychod; x++) {
+						const tile = document.createElement('div');
+						tile.className = 'map-tile';
+						
+						const tileX = x * 512;
+						const tileZ = z * 512;
+						
+						tile.dataset.x = tileX;
+						tile.dataset.z = tileZ;
+						
+						const img = document.createElement('img');
+						img.src = `Data/map_${x}_${z}.webp`;
+						img.alt = `Mapa ${x},${z}`;
+						img.loading = "lazy";
+						img.draggable = false;
+						tile.appendChild(img);
+						
+						mapGrid.appendChild(tile);
+						tiles.push(tile);
+					}
+				}
 			}
 			
 			searchInput.addEventListener('input', (e) => {
