@@ -3,18 +3,20 @@
     <head>
         <script type="text/javascript">
             async function loadFirst() {
-                const response = await fetch('first.json');
-                const data = await response.json();
-                const divFirst = document.getElementById('firstData');
-                
-                data.forEach((item, index) => {
-                    const paragraph = document.createElement('p');
-                    paragraph.className = 'inner';
-                    paragraph.id = `first-${index}`;
-                    paragraph.textContent = `${item.name} ${item.x} ${item.y} ${item.z}`;
-                    divFirst.appendChild(paragraph);
-                });
-            }
+				const response = await fetch('first.json');
+				const data = await response.json();
+				console.log('Načítané dáta:', data); // pre debug
+				const divFirst = document.getElementById('firstData');
+				
+				data.forEach((item, index) => {
+					console.log('Spracovávam položku:', item); // pre debug
+					const paragraph = document.createElement('p');
+					paragraph.className = 'inner';
+					paragraph.id = `first-${index}`;
+					paragraph.textContent = `${item.name} ${item.x} ${item.y} ${item.z}`;
+					divFirst.appendChild(paragraph);
+				});
+			}
 
             async function loadSecond() {
                 const response = await fetch('second.json');
@@ -25,7 +27,7 @@
                     const paragraph = document.createElement('p');
                     paragraph.className = 'inner';
                     paragraph.id = `second-${index}`;
-                    paragraph.textContent = `${item.name} ${item.x}`;
+                    paragraph.textContent = `${item.name}${item.x}`;
                     divSecond.appendChild(paragraph);
                 });
             }
@@ -39,7 +41,7 @@
                     const paragraph = document.createElement('p');
                     paragraph.className = 'inner';
                     paragraph.id = `third-${index}`;
-                    paragraph.textContent = `${item.name} ${item.x}`;
+                    paragraph.textContent = `${item.name}${item.x}`;
                     divThird.appendChild(paragraph);
                 });
             }
