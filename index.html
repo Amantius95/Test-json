@@ -1,6 +1,183 @@
 <!DOCTYPE html>
 <html lang="sk">
     <head>
+	    <meta charset="UTF-8">
+		<title>Navigácia po mape</title>
+		<style>
+			body {
+				margin: 0;
+				padding: 0;
+				width: 100vw;
+				height: 100vh;
+				overflow: hidden;
+			}
+			.map-container {
+				position: relative;
+				width: 80vw;         /* Zmena na relatívnu šírku */
+				height: 90vh;        /* Zmena na relatívnu výšku */
+				margin: 2vh auto;
+				border: 2px solid #333;
+				overflow: hidden;
+				cursor: grab;
+			}
+
+			.map-container:active {
+				cursor: grabbing;
+			}
+
+			.map-grid {
+				position: absolute;
+				display: grid;
+				grid-template-columns: repeat(var(--columns), 512px);
+				grid-template-rows: repeat(512px);
+				transform-origin: 0 0;
+				transition: transform 0.1s ease-out;
+			}
+
+			.map-tile {
+				width: 512px;
+				height: 512px;
+				background-color: #f0f0f0;
+				position: relative;
+				overflow: hidden;
+			}
+
+			.map-tile img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				user-select: none;
+				-webkit-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				pointer-events: none;
+			}
+
+			.coordinates {
+				position: fixed;
+				top: 10px;
+				left: 10px;
+				background: rgba(255, 255, 255, 0.8);
+				padding: 5px;
+				border-radius: 3px;
+				z-index: 1000;
+			}
+
+			.zoom-controls {
+				position: fixed;
+				right: 10px;
+				top: 10px;
+				background: white;
+				padding: 5px;
+				border-radius: 3px;
+				z-index: 1000;
+			}
+
+			.map-point {
+				position: absolute;
+				width: 20px;
+				height: 20px;
+				transform: translate(-50%, -50%);
+				z-index: 1000;
+				pointer-events: auto;
+				background-size: contain;
+				background-repeat: no-repeat;
+				background-position: center;
+				cursor: pointer;
+			}
+
+			.map-point-home {
+				background-image: url('Data/Home.svg');
+			}
+
+			.map-point-cyclone1 {
+				background-image: url('Data/Cyclone1.svg');
+			}
+
+			.map-point-cyclone2 {
+				background-image: url('Data/Cyclone2.svg');
+			}
+			
+			.map-point-pozor {
+				background-image: url('Data/Pozor.svg');
+			}
+
+			.point-label {
+				position: absolute;
+				background: white;
+				padding: 2px 8px;
+				border-radius: 7px;
+				transform: translateY(-32px);
+				white-space: nowrap;
+				display: none;
+				text-align: center;
+			}
+			
+			.point-name {
+				font-size: 14px;
+				font-weight: bold;
+				margin-bottom: 1px;
+			}
+
+			.point-coordinates {
+				font-size: 12px;
+				color: #666;
+			}
+			
+			.map-point:hover .point-label {
+				display: block;  /* Zobrazí sa pri hoveri */
+			}
+			
+			.map-line {
+				position: absolute;
+				height: 2px;
+				background-color: red;
+				transform-origin: 0 50%;
+				pointer-events: none;
+				z-index: 900;
+			}
+			.search-container {
+				position: fixed;
+				top: 60px;
+				left: 5px;
+				background: rgba(255, 255, 255, 0.8);
+				padding: 5px;
+				border-radius: 3px;
+				z-index: 1000;
+			}
+
+			.search-results {
+				position: absolute;
+				top: 100%;
+				left: 0;
+				background: white;
+				border: 1px solid #ccc;
+				border-radius: 3px;
+				max-height: 200px;
+				overflow-y: auto;
+				width: 100%;
+				display: none;
+			}
+
+			.search-result-item {
+				padding: 5px;
+				cursor: pointer;
+			}
+
+			.search-result-item:hover {
+				background-color: #f0f0f0;
+			}
+			
+			.tunnel-line {
+				position: absolute;
+				height: 3px;
+				background-color: #b56824;  /* tmavšia farba */
+				transform-origin: 0 50%;
+				pointer-events: none;
+				z-index: 900;
+			}
+			
+		</style>
         <script type="text/javascript">
             async function loadFirst() {
 				const response = await fetch('first.json');
