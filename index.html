@@ -269,12 +269,12 @@
 				const response = await fetch('first.json');
 				const data = await response.json();
 				
-				// Transform the data into points array with type 'cyclone1'
+				// Transformácia dát do poľa bodov s typom 'cyclone1'
 				const points = data.map((item, index) => {
-					// Determine the type of point based on index (alternating between cyclone1 and cyclone2)
+					// Určenie typu bodu na základe indexu (striedanie medzi cyclone1 a cyclone2)
 					const type = index % 2 === 0 ? 'cyclone1' : 'cyclone2';
 					
-					// Create a point object with all original properties plus type
+					// Vytvorenie objektu bodu so všetkými pôvodnými vlastnosťami plus typ
 					return {
 						id: `${index % 2 === 0 ? 'a' : 'b'}${Math.floor(index / 2) + 1}`,
 						name: item.name,
@@ -285,10 +285,13 @@
 					};
 				});
 
-				// Replace the global points array
+				// Nahradenie globálneho poľa bodov
 				window.points = points;
 
-				// Recreate map points after loading
+				// Automatické vytvorenie spojení
+				window.connections = createConnections(points);
+
+				// Opätovné vytvorenie mapových bodov po načítaní
 				createMapPoints();
 			}
 
@@ -299,9 +302,9 @@
 						loadFirst(),
 						loadSecond(),
 						loadThird(),
-						loadMapPoints() // Add this line
+						loadMapPoints() // Pridanie tejto riadky
 					]);
-					// After loading all data, initialize the map
+					// Po načítaní všetkých dát inicializujte mapu
 					initializeMap();
 				} catch (error) {
 					console.error('Chyba pri načítaní dát:', error);
@@ -338,12 +341,6 @@
 			function findPoint(id) {
 				return points.find(point => point.id === id);
 			}
-			
-			const connections = [
-				{ from: 'a1', to: 'b1' },
-				{ from: 'a2', to: 'b2' },
-				{ from: 'a3', to: 'b3' }
-			];
 			
 			const tunnels = [
 				{ T1: { x: -2605, z: -5199 }, T2: { x: -2320, z: -5152 }, T3: { x: -1119, z: -4646 }},
@@ -690,6 +687,41 @@
 						tiles.push(tile);
 					}
 				}
+			}
+			
+			function createConnections(points) {
+				// Rozdelíme body do skupín podľa poradia
+				const pointGroups = {};
+				
+				// Zoskupenie bodov podľa ich prefixu (a1, b1, a2, b2...)
+				points.forEach(point => {
+					const match = point.id.match(/([ab])(\d+)/);
+					if (match) {
+						const prefix = match[1];
+						const number = match[2];
+						
+						if (!pointGroups[number]) {
+							pointGroups[number] = {};
+						}
+						pointGroups[number][prefix] = point.id;
+					}
+				});
+				
+				// Vytvorenie spojení
+				const connections = [];
+				
+				// Prejdeme všetky spárované body
+				Object.values(pointGroups).forEach(pair => {
+					// Pridáme spojenie len ak existujú oba body (a aj b)
+					if (pair.a && pair.b) {
+						connections.push({
+							from: pair.a,
+							to: pair.b
+						});
+					}
+				});
+				
+				return connections;
 			}
 			
 			searchInput.addEventListener('input', (e) => {
