@@ -264,6 +264,33 @@
 				juh = parseInt(data.mapBounds.juh);
 				vychod = parseInt(data.mapBounds.vychod);
 			}
+			
+			async function loadMapPoints() {
+				const response = await fetch('first.json');
+				const data = await response.json();
+				
+				// Transform the data into points array with type 'cyclone1'
+				const points = data.map((item, index) => {
+					// Determine the type of point based on index (alternating between cyclone1 and cyclone2)
+					const type = index % 2 === 0 ? 'cyclone1' : 'cyclone2';
+					
+					// Create a point object with all original properties plus type
+					return {
+						id: `${index % 2 === 0 ? 'a' : 'b'}${Math.floor(index / 2) + 1}`,
+						name: item.name,
+						x: item.x,
+						y: item.y,
+						z: item.z,
+						type: type
+					};
+				});
+
+				// Replace the global points array
+				window.points = points;
+
+				// Recreate map points after loading
+				createMapPoints();
+			}
 
 
             async function loadAll() {
@@ -271,9 +298,10 @@
 					await Promise.all([
 						loadFirst(),
 						loadSecond(),
-						loadThird()
+						loadThird(),
+						loadMapPoints() // Add this line
 					]);
-					// Po načítaní všetkých dát inicializujte mapu
+					// After loading all data, initialize the map
 					initializeMap();
 				} catch (error) {
 					console.error('Chyba pri načítaní dát:', error);
@@ -306,94 +334,6 @@
 			
 			// Vytvorenie mapových dielov
 			const tiles = [];
-			
-			const points = [
-				{ id: 'n1', name: 'Amantius', x: -1354, y: '',z: -4619, type: 'home'},
-				{ id: 'a1', name: 'Am 1a', x: 54, y: 104, z: -3737, type: 'cyclone1'},
-				{ id: 'b1', name: 'Am 1b', x: -6221, y: 29, z: -1943, type: 'cyclone2'},
-				{ id: 'a2', name: 'a2', x: -8101, y: 116, z: 6831, type: 'cyclone1'},
-				{ id: 'b2', name: 'b2', x: -15800, y: 87, z: 8521, type: 'cyclone2'},
-				{ id: 'a3', name: 'Am 2a', x: 2148, y: 104, z: -2196, type: 'cyclone1'},
-				{ id: 'b3', name: 'Am 2b', x: 7944, y: 13, z: -8571, type: 'cyclone2'},
-				{ id: 'a4', name: 'Am 3a', x: 7944, y: 20, z: -8447, type: 'cyclone1'},
-				{ id: 'b4', name: 'Am 3b', x: 10455, y: 37, z: -12748, type: 'cyclone2'},
-				{ id: 'a5', name: 'a5', x: 1429, y: 90, z: 4827, type: 'cyclone1'},
-				{ id: 'b5', name: 'b5', x: -4270, y: 44, z: 10884, type: 'cyclone2'},
-				{ id: 'a6', name: 'Am 4a', x: 95, y: 91, z: -4251, type: 'cyclone1'},
-				{ id: 'b6', name: 'Am 4b', x: 8083, y: 55, z: -6593, type: 'cyclone2'},
-				{ id: 'a7', name: 'a7', x: 1088, y: 87, z: 611, type: 'cyclone1'},
-				{ id: 'b7', name: 'b7', x: 4036, y: 15, z: 2866, type: 'cyclone2'},
-				{ id: 'a8', name: 'a8', x: 1921, y: 96, z: 2023, type: 'cyclone1'},
-				{ id: 'b8', name: 'b8', x: -1758, y: 28, z: 7314, type: 'cyclone2'},
-				{ id: 'a9', name: 'a9', x: -1766, y: 22, z: 7326, type: 'cyclone1'},
-				{ id: 'b9', name: 'b9', x: -8913, y: 64, z: 15210, type: 'cyclone2'},
-				{ id: 'a10', name: 'a10', x: 92, y: 115, z: 1429, type: 'cyclone1'},
-				{ id: 'b10', name: 'b10', x: -6288, y: 99, z: 746, type: 'cyclone2'},
-				{ id: 'a11', name: 'Am 5a', x: -796, y: 58, z: -4505, type: 'cyclone1'},
-				{ id: 'b11', name: 'Am 5b', x: -3891, y: 91, z: -8225, type: 'cyclone2'},
-				{ id: 'a12', name: 'a12', x: -949, y: 96, z: 1534, type: 'cyclone1'},
-				{ id: 'b12', name: 'b12', x: 4407, y: 17, z: -1533, type: 'cyclone2'},
-				{ id: 'a13', name: 'a13', x: 965, y: 69, z: 540, type: 'cyclone1'},
-				{ id: 'b13', name: 'b13', x: -4132, y: 41, z: 6476, type: 'cyclone2'},
-				{ id: 'a14', name: 'a14', x: -4274, y: 78, z: 6548, type: 'cyclone1'},
-				{ id: 'b14', name: 'b14', x: -5053, y: 22, z: 1689, type: 'cyclone2'},
-				{ id: 'a15', name: 'a15', x: -5993, y: 95, z: 7840, type: 'cyclone1'},
-				{ id: 'b15', name: 'b15', x: -5145, y: 122, z: 287, type: 'cyclone2'},
-				{ id: 'a16', name: 'E 2a', x: 1908, y: 61, z: 2015, type: 'cyclone1'},
-				{ id: 'b16', name: 'E 2b', x: -3013, y: 87, z: 3122, type: 'cyclone2'},
-				{ id: 'a17', name: 'a17', x: -6185, y: 93, z: 8628, type: 'cyclone1'},
-				{ id: 'b17', name: 'b17', x: -4362, y: 55, z: 7968, type: 'cyclone2'},
-				{ id: 'a18', name: 'a18', x: 1275, y: 61, z: 287, type: 'cyclone1'},
-				{ id: 'b18', name: 'b18', x: -5113, y: 25, z: -3917, type: 'cyclone2'},
-				{ id: 'a19', name: 'Am 6a', x: -1119, y: 98, z: -4645, type: 'cyclone1'},
-				{ id: 'b19', name: 'Am 6b', x: -4262, y: 41, z: -9651, type: 'cyclone2'},
-				{ id: 'a20', name: 'a20', x: -5042, y: 123, z: 7573, type: 'cyclone1'},
-				{ id: 'b20', name: 'b20', x: -548, y: 78, z: 10694, type: 'cyclone2'},
-				{ id: 'a21', name: 'E 4a', x: 2089, y: 76, z: 2170, type: 'cyclone1'},
-				{ id: 'b21', name: 'E 4b', x: 7985, y: 77, z: -47, type: 'cyclone2'},
-				{ id: 'a22', name: 'a22', x: 1252, y: 45, z: 387, type: 'cyclone1'},
-				{ id: 'b22', name: 'b22', x: 5075, y: 12, z: 6501, type: 'cyclone2'},
-				{ id: 'a23', name: 'a23', x: -16264, y: 55, z: 8746, type: 'cyclone1'},
-				{ id: 'b23', name: 'b23', x: -20685, y: 97, z: 16173, type: 'cyclone2'},
-				{ id: 'a24', name: 'a24', x: -4136, y: 113, z: 11046, type: 'cyclone1'},
-				{ id: 'b24', name: 'b24', x: -5149, y: 62, z: 12731, type: 'cyclone2'},
-				{ id: 'a25', name: 'a25', x: 8235, y: 113, z: -72, type: 'cyclone1'},
-				{ id: 'b25', name: 'b25', x: 14925, y: 77, z: -624, type: 'cyclone2'},
-				{ id: 'a26', name: 'a26', x: -4284, y: 61, z: 10992, type: 'cyclone1'},
-				{ id: 'b26', name: 'b26', x: -2524, y: 25, z: 18065, type: 'cyclone2'},
-				{ id: 'a27', name: 'Am 7a', x: -2604, y: 98, z: -5199, type: 'cyclone1'},
-				{ id: 'b27', name: 'Am 7b', x: -3334, y: 40, z: 2309, type: 'cyclone2'},
-				{ id: 'a28', name: 'a28', x: 2224, y: 55, z: 1946, type: 'cyclone1'},
-				{ id: 'b28', name: 'b28', x: -3379, y: 85, z: -752, type: 'cyclone2'},
-				{ id: 'a29', name: 'a29', x: -408, y: 78, z: 1326, type: 'cyclone1'},
-				{ id: 'b29', name: 'b29', x: 83, y: 67, z: -3218, type: 'cyclone2'},
-				{ id: 'a30', name: 'a30', x: 8443, y: 86, z: 189, type: 'cyclone1'},
-				{ id: 'b30', name: 'b30', x: 564, y: 50, z: 1123, type: 'cyclone2'},
-				{ id: 'a31', name: 'a31', x: 8459, y: 94, z: 213, type: 'cyclone1'},
-				{ id: 'b31', name: 'b31', x: 6760, y: 62, z: 7267, type: 'cyclone2'},
-				{ id: 'a32', name: 'a32', x: 1194, y: 23, z: -49, type: 'cyclone1'},
-				{ id: 'b32', name: 'b32', x: 283, y: 93, z: -6675, type: 'cyclone2'},
-				{ id: 'a33', name: 'a33', x: 7444, y: 92, z: 2385, type: 'cyclone1'},
-				{ id: 'b33', name: 'b33', x: 14122, y: 76, z: 7099, type: 'cyclone2'},
-				{ id: 'a34', name: 'Am 8a', x: 126, y: 96, z: -4071, type: 'cyclone1'},
-				{ id: 'b34', name: 'Am 8b', x: 6754, y: 25, z: -7986, type: 'cyclone2'},
-				{ id: 'a35', name: 'Am 9a', x: 4054, y: 128, z: -7, type: 'cyclone1'},
-				{ id: 'b35', name: 'Am 9b', x: 5731, y: 20, z: -7620, type: 'cyclone2'},
-				{ id: 'a36', name: 'a36', x: -2455, y: 40, z: 18050, type: 'cyclone1'},
-				{ id: 'b36', name: 'b36', x: -7470, y: 101, z: 18822, type: 'cyclone2'},
-				{ id: 'a37', name: 'a37', x: 14134, y: 77, z: 7084, type: 'cyclone1'},
-				{ id: 'b37', name: 'b37', x: 17667, y: 13, z: -396, type: 'cyclone2'},
-				{ id: 'a38', name: 'a38', x: -1228, y: 93, z: 1004, type: 'cyclone1'},
-				{ id: 'b38', name: 'b38', x: 1029, y: 79, z: -6309, type: 'cyclone2'},
-				{ id: 'a39', name: 'a39', x: 2133, y: 23, z: 2114, type: 'cyclone1'},
-				{ id: 'b39', name: 'b39', x: -2795, y: 61, z: -1620, type: 'cyclone2'},
-				{ id: 'a40', name: 'a40', x: 987, y: 38, z: 852, type: 'cyclone1'},
-				{ id: 'b40', name: 'b40', x: 1892, y: 47, z: -6763, type: 'cyclone2'},
-				{ id: 'a41', name: 'Am 10a', x: -2094, y: 67, z: -5136, type: 'cyclone1'},
-				{ id: 'b41', name: 'Am 10b', x: 2553, y: 70, z: -7879, type: 'cyclone2'},
-				{ id: 'z1', name: 'Nezačatá stavba', x: -3152, y: '', z: 2704, type: 'pozor'},
-				{ id: 'z2', name: 'V procese stavby', x: -1840, y: '', z: -4956, type: 'pozor'}
-			];
 
 			function findPoint(id) {
 				return points.find(point => point.id === id);
@@ -402,45 +342,7 @@
 			const connections = [
 				{ from: 'a1', to: 'b1' },
 				{ from: 'a2', to: 'b2' },
-				{ from: 'a3', to: 'b3' },
-				{ from: 'a4', to: 'b4' },
-				{ from: 'a5', to: 'b5' },
-				{ from: 'a6', to: 'b6' },
-				{ from: 'a7', to: 'b7' },
-				{ from: 'a8', to: 'b8' },
-				{ from: 'a9', to: 'b9' },
-				{ from: 'a10', to: 'b10' },
-				{ from: 'a11', to: 'b11' },
-				{ from: 'a12', to: 'b12' },
-				{ from: 'a13', to: 'b13' },
-				{ from: 'a14', to: 'b14' },
-				{ from: 'a15', to: 'b15' },
-				{ from: 'a16', to: 'b16' },
-				{ from: 'a17', to: 'b17' },
-				{ from: 'a18', to: 'b18' },
-				{ from: 'a19', to: 'b19' },
-				{ from: 'a20', to: 'b20' },
-				{ from: 'a21', to: 'b21' },
-				{ from: 'a22', to: 'b22' },
-				{ from: 'a23', to: 'b23' },
-				{ from: 'a24', to: 'b24' },
-				{ from: 'a25', to: 'b25' },
-				{ from: 'a26', to: 'b26' },
-				{ from: 'a27', to: 'b27' },
-				{ from: 'a28', to: 'b28' },
-				{ from: 'a29', to: 'b29' },
-				{ from: 'a30', to: 'b30' },
-				{ from: 'a31', to: 'b31' },
-				{ from: 'a32', to: 'b32' },
-				{ from: 'a33', to: 'b33' },
-				{ from: 'a34', to: 'b34' },
-				{ from: 'a35', to: 'b35' },
-				{ from: 'a36', to: 'b36' },
-				{ from: 'a37', to: 'b37' },
-				{ from: 'a38', to: 'b38' },
-				{ from: 'a39', to: 'b39' },
-				{ from: 'a40', to: 'b40' },
-				{ from: 'a41', to: 'b41' }
+				{ from: 'a3', to: 'b3' }
 			];
 			
 			const tunnels = [
