@@ -285,6 +285,10 @@
 			let startX;
 			let startZ;
 			let zoom = 1;
+			let sever = 1;
+			let zapad = 1;
+			let juh = 1;
+			let vychod = 1;
 			let lineStartX = 0;
 			let lineStartZ = 0;
 			let lineEndX = -0;
@@ -292,6 +296,7 @@
 			let mapLines = [];
 			let activeConnections = [];
 			
+			console.log(sever, zapad, juh, vychod);
 			document.documentElement.style.setProperty('--columns', vychod + zapad);
 			
 			// Vytvorenie mapových dielov
