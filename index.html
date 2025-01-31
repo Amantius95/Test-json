@@ -216,18 +216,22 @@
             }
 
             async function loadThird() {
-                const response = await fetch('third.json');
-                const data = await response.json();
-                const divThird = document.getElementById('thirdData');
-                
-                data.forEach((item, index) => {
-                    const paragraph = document.createElement('p');
-                    paragraph.className = 'inner';
-                    paragraph.id = `third-${index}`;
-                    paragraph.textContent = `${item.name}${item.x}`;
-                    divThird.appendChild(paragraph);
-                });
-            }
+				const response = await fetch('third.json');
+				const data = await response.json();
+				
+				// Nastavenie hodnôt z načítaných dát
+				sever = data.mapBounds.sever;
+				zapad = data.mapBounds.zapad;
+				juh = data.mapBounds.juh;
+				vychod = data.mapBounds.vychod;
+				
+				// Nastavenie počtu stĺpcov pre grid po načítaní hodnôt
+				document.documentElement.style.setProperty('--columns', vychod + zapad);
+				
+				// Vytvorenie mapových dielov až po načítaní hodnôt
+				createMapPoints();
+				updatePosition(currentX, currentZ);
+			}
 
             async function loadAll() {
                 try {
@@ -281,10 +285,6 @@
 			let startX;
 			let startZ;
 			let zoom = 1;
-			let sever = 3;
-			let zapad = 6;
-			let juh = 6;
-			let vychod = 5;
 			let lineStartX = 0;
 			let lineStartZ = 0;
 			let lineEndX = -0;
