@@ -216,29 +216,19 @@
             }
 
             async function loadThird() {
-				const response = await fetch('third.json');
-				const data = await response.json();
-				
-				console.log('Načítané dáta z third.json:', data);
-				
-				if (data && data.mapBounds) {
-					sever = data.mapBounds.sever;
-					zapad = data.mapBounds.zapad;
-					juh = data.mapBounds.juh;
-					vychod = data.mapBounds.vychod;
-					
-					console.log('Map bounds po načítaní:', { sever, zapad, juh, vychod });  // Logovanie map bounds
-				} else {
-					console.error('Chyba: mapBounds nie sú definované v dátach');
-				}
-				
-				// Nastavenie počtu stĺpcov pre grid po načítaní hodnôt
-				document.documentElement.style.setProperty('--columns', vychod + zapad);
-				
-				// Vytvorenie mapových dielov až po načítaní hodnôt
-				createMapPoints();
-				updatePosition(currentX, currentZ);
-			}
+                const response = await fetch('second.json');
+                const data = await response.json();
+                const divSecond = document.getElementById('secondData');
+                
+                data.forEach((item, index) => {
+                    const paragraph = document.createElement('p');
+                    paragraph.className = 'inner';
+                    paragraph.id = `second-${index}`;
+                    paragraph.textContent = `${item.sever}${item.zapad}${item.juh}${item.vychod}`;
+                    divSecond.appendChild(paragraph);
+                });
+            }
+
 
             async function loadAll() {
                 try {
