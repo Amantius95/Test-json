@@ -11,7 +11,7 @@
                     const paragraph = document.createElement('p');
                     paragraph.className = 'inner';
                     paragraph.id = `first-${index}`;
-                    paragraph.textContent = `${item.name}${item.x}${item.y}${item.z}`;
+                    paragraph.textContent = `${item.name} ${item.x} ${item.y} ${item.z}`;
                     divFirst.appendChild(paragraph);
                 });
             }
@@ -25,7 +25,7 @@
                     const paragraph = document.createElement('p');
                     paragraph.className = 'inner';
                     paragraph.id = `second-${index}`;
-                    paragraph.textContent = `${item.name}${item.x}`;
+                    paragraph.textContent = `${item.name} ${item.x}`;
                     divSecond.appendChild(paragraph);
                 });
             }
@@ -39,7 +39,7 @@
                     const paragraph = document.createElement('p');
                     paragraph.className = 'inner';
                     paragraph.id = `third-${index}`;
-                    paragraph.textContent = `${item.name}${item.x}`;
+                    paragraph.textContent = `${item.name} ${item.x}`;
                     divThird.appendChild(paragraph);
                 });
             }
