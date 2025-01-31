@@ -5,11 +5,9 @@
             async function loadFirst() {
 				const response = await fetch('first.json');
 				const data = await response.json();
-				console.log('Načítané dáta:', data); // pre debug
 				const divFirst = document.getElementById('firstData');
 				
 				data.forEach((item, index) => {
-					console.log('Spracovávam položku:', item); // pre debug
 					const paragraph = document.createElement('p');
 					paragraph.className = 'inner';
 					paragraph.id = `first-${index}`;
