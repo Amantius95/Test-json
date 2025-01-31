@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html>
     <head>
@@ -10,7 +11,15 @@
 				data.forEach((item, index) => {
 					const paragraph = document.createElement('p');
 					paragraph.className = 'inner';
-					paragraph.id = `first-${index}`;
+					
+					// Vypočítame číslo páru (1, 2, 3, ...) na základe indexu
+					const pairNumber = Math.floor(index / 2) + 1;
+					// Určíme či ide o prvý (a) alebo druhý (b) bod v páre
+					const pairLetter = index % 2 === 0 ? 'a' : 'b';
+					// Vytvoríme ID v požadovanom formáte (a1, b1, a2, b2, ...)
+					const customId = `${pairLetter}${pairNumber}`;
+					
+					paragraph.id = customId;
 					paragraph.textContent = `${item.name} ${item.x} ${item.y} ${item.z}`;
 					divFirst.appendChild(paragraph);
 				});
