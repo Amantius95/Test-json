@@ -243,26 +243,22 @@
             }
 
             async function loadThird() {
-                const response = await fetch('third.json');
-                const data = await response.json();
-                const divSecond = document.getElementById('thirdData');
-                
-                data.forEach((item, index) => {
-                    const paragraph = document.createElement('p');
-                    paragraph.className = 'inner';
-                    paragraph.id = `second-${index}`;
-                    paragraph.textContent = `${item.sever}${item.zapad}${item.juh}${item.vychod}`;
-                    divSecond.appendChild(paragraph);
-                });
-            }
+				const response = await fetch('third.json');
+				const data = await response.json();
+				
+				// Nastavenie hodnôt z načítaných dát
+				sever = data.mapBounds.sever;
+				zapad = data.mapBounds.zapad;
+				juh = data.mapBounds.juh;
+				vychod = data.mapBounds.vychod;
+			}
 
 
             async function loadAll() {
                 try {
                     await Promise.all([
                         loadFirst(),
-                        loadSecond(),
-                        loadThird()
+                        loadSecond()
                     ]);
                 } catch (error) {
                     console.error('Chyba pri načítaní dát:', error);
