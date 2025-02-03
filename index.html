@@ -681,7 +681,10 @@
 						tiles.push(tile);
 					}
 				}
+				return tiles;  // Pridajte return
 			}
+			
+			const tiles = createMapTiles();
 			
 			function createConnections(points) {
 				// Rozdelíme body do skupín podľa poradia
