@@ -216,7 +216,37 @@
 					// Vytvoríme ID v požadovanom formáte (a1, b1, a2, b2, ...)
 					const customId = `${pairLetter}${pairNumber}`;
 					
+					paragraph.id = customId;
+					paragraph.textContent = `${item.name} ${item.x} ${item.y} ${item.z}`;
+					divFirst.appendChild(paragraph);
 				});
+			}
+
+            async function loadSecond() {
+				try {
+					// Načítanie dát z third.json, aby sme získali hodnotu sever
+					const responseThird = await fetch('third.json');
+					const dataThird = await responseThird.json();
+					const sever = dataThird.mapBounds.sever;  // Získanie hodnoty sever
+
+					// Načítanie dát z second.json
+					const responseSecond = await fetch('second.json');
+					const dataSecond = await responseSecond.json();
+
+					const divSecond = document.getElementById('secondData');
+					
+					// Iterácia cez položky v second.json a vytvorenie odstavcov
+					dataSecond.forEach((item, index) => {
+						const paragraph = document.createElement('p');
+						paragraph.className = 'inner';
+						paragraph.id = `second-${index}`;
+						// Zobrazenie hodnoty sever namiesto `${item.name}${item.x}`
+						paragraph.textContent = `Sever: ${sever}`;  
+						divSecond.appendChild(paragraph);
+					});
+				} catch (error) {
+					console.error('Chyba pri načítaní dát:', error);
+				}
 			}
 
             async function loadThird() {
@@ -264,6 +294,7 @@
 				try {
 					await Promise.all([
 						loadFirst(),
+						loadSecond(),
 						loadThird(),
 						loadMapPoints() // Pridanie tejto riadky
 					]);
@@ -640,7 +671,7 @@
 						tile.dataset.z = tileZ;
 						
 						const img = document.createElement('img');
-						img.src = `Data/map_${x}_${z}.webp`;
+						img.src = `http://mox.chita.cz:8080/basic/3/11200/1100/tiles/basic/3/${31 + x}_${31 + z}.webp`;
 						img.alt = `Mapa ${x},${z}`;
 						img.loading = "lazy";
 						img.draggable = false;
