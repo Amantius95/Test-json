@@ -640,7 +640,8 @@
 						tile.dataset.z = tileZ;
 						
 						const img = document.createElement('img');
-						img.src = `http://mox.chita.cz:8080/basic/3/11200/1100/tiles/basic/3/${31 + x}_${31 + z}.webp`;
+						// Pridáme offset 31, aby sa (0,0) mapovalo na (31,31)
+						img.src = `http://mox.chita.cz:8080/basic/3/11200/1100/tiles/basic/3/${x + 31}_${z + 31}.webp`;
 						img.alt = `Mapa ${x},${z}`;
 						img.loading = "lazy";
 						img.draggable = false;
