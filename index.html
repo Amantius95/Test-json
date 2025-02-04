@@ -627,9 +627,10 @@
 			}
 
 			function createMapTiles() {
+				const baseUrl = 'http://mox.chita.cz:8080/basic/0/0/0/tiles/basic/3/';
 				const tiles = [];
-				for (let z = -sever; z < juh; z++) {
-					for (let x = -zapad; x < vychod; x++) {
+				for (let z = 31; z < 33; z++) {
+					for (let x = 31; x < 33; x++) {
 						const tile = document.createElement('div');
 						tile.className = 'map-tile';
 						
@@ -640,9 +641,7 @@
 						tile.dataset.z = tileZ;
 						
 						const img = document.createElement('img');
-						// Pridáme offset 31, aby sa (0,0) mapovalo na (31,31)  
-						//<img src="http://mox.chita.cz:8080/basic/0/0/0/tiles/basic/3/31_31.webp" alt="Môj obrázok">
-						img.src = `http://mox.chita.cz:8080/basic/0/0/0/tiles/basic/3/${31 + x}_${31 + z}.webp`;
+						img.src = `${baseUrl}${x}_${z}.webp`;
 						img.alt = `Mapa ${x},${z}`;
 						img.loading = "lazy";
 						img.draggable = false;
