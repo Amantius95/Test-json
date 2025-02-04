@@ -627,10 +627,9 @@
 			}
 
 			function createMapTiles() {
-				const baseUrl = 'http://mox.chita.cz:8080/basic/0/0/0/tiles/basic/3/';
 				const tiles = [];
-				for (let z = 31; z < 33; z++) {
-					for (let x = 31; x < 33; x++) {
+				for (let z = -sever; z < juh; z++) {
+					for (let x = -zapad; x < vychod; x++) {
 						const tile = document.createElement('div');
 						tile.className = 'map-tile';
 						
@@ -641,7 +640,7 @@
 						tile.dataset.z = tileZ;
 						
 						const img = document.createElement('img');
-						img.src = `${baseUrl}${x}_${z}.webp`;
+						img.src = `Data/map_${x}_${z}.webp`;
 						img.alt = `Mapa ${x},${z}`;
 						img.loading = "lazy";
 						img.draggable = false;
