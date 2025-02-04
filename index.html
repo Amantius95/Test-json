@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="sk">
-    <head>
-	    <meta charset="UTF-8">
+	<head>
 		<title>Navigácia po mape</title>
 		<style>
 			body {
@@ -20,11 +19,9 @@
 				overflow: hidden;
 				cursor: grab;
 			}
-
 			.map-container:active {
 				cursor: grabbing;
 			}
-
 			.map-grid {
 				position: absolute;
 				display: grid;
@@ -33,7 +30,6 @@
 				transform-origin: 0 0;
 				transition: transform 0.1s ease-out;
 			}
-
 			.map-tile {
 				width: 512px;
 				height: 512px;
@@ -176,17 +172,15 @@
 				pointer-events: none;
 				z-index: 900;
 			}
-			
 			#mapContainer {
 				display: grid;
 				grid-template-columns: repeat(2, 1fr);
 				gap: 0;
 				width: fit-content;
 			}
-			
 		</style>
-    </head>
-    <body onload="loadAll()">
+	</head>
+	<body>
         <div id="firstData"></div>
         <div id="secondData"></div>
         <div id="thirdData"></div>
@@ -620,42 +614,45 @@
 				updateLinePositions();
 				updateTunnelPositions();
 			}
-			
+		
 			function initializeMap() {
 				console.log(sever, zapad, juh, vychod);
-				document.documentElement.style.setProperty('--columns', vychod + zapad);
+				document.documentElement.style.setProperty('--columns', vychod + zapad);				
 				
-				// Vytvorenie mapových dielov
 				createMapTiles(mapContainer);
 				createMapLines();
 				createTunnelLines();
 				createMapPoints();
 				updatePosition(currentX, currentZ);
 			}
+			
+			
 
 			function createMapTiles(tile) {
 				const baseUrl = 'http://mox.chita.cz:8080/basic/3/11200/1100/tiles/basic/3/';
 				const tiles = [];
+				
 				for (let z = -sever; z < juh; z++) {
 					for (let x = -zapad; x < vychod; x++) {
-						const tile = document.createElement('div');
-						tile.className = 'map-tile';
+						//const tile = document.createElement('div');
+						//tile.className = 'map-tile';
 						
 						const tileX = x * 512;
 						const tileZ = z * 512;
 						
 						tile.dataset.x = tileX;
 						tile.dataset.z = tileZ;
-						
+					
 						const img = document.createElement('img');
 						img.src = `${baseUrl}${31 + x}_${31 + z}.webp`;
-						img.alt = `Mapa ${x},${z}`;
+						img.alt = `Mapa ${x}_${z}`;
 						img.loading = "lazy";
 						img.draggable = false;
 						tile.appendChild(img);
 						
-						mapGrid.appendChild(tile);
+						//mapGrid.appendChild(tile);
 						tiles.push(tile);
+						
 					}
 				}
 			}
@@ -750,11 +747,12 @@
 				}
 			});
 
-			// Inicializácia
-			createMapLines();
+			// Initialize map when page loads
+			//createMapLines();
+			//createMapPoints();
+			//updatePosition(currentX, currentZ);
 			createTunnelLines();
-			createMapPoints();
-			updatePosition(currentX, currentZ);
+			window.addEventListener('load', initializeMap);
 		</script>
 	</body>
 </html>
