@@ -177,6 +177,13 @@
 				z-index: 900;
 			}
 			
+			#mapContainer {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+				gap: 0;
+				width: fit-content;
+			}
+			
 		</style>
     </head>
     <body onload="loadAll()">
@@ -619,14 +626,15 @@
 				document.documentElement.style.setProperty('--columns', vychod + zapad);
 				
 				// Vytvorenie mapových dielov
-				createMapTiles();
+				createMapTiles(mapContainer);
 				createMapLines();
 				createTunnelLines();
 				createMapPoints();
 				updatePosition(currentX, currentZ);
 			}
 
-			function createMapTiles() {
+			function createMapTiles(tile) {
+				const baseUrl = 'http://mox.chita.cz:8080/basic/3/11200/1100/tiles/basic/3/';
 				const tiles = [];
 				for (let z = -sever; z < juh; z++) {
 					for (let x = -zapad; x < vychod; x++) {
@@ -640,7 +648,7 @@
 						tile.dataset.z = tileZ;
 						
 						const img = document.createElement('img');
-						img.src = `Data/map_${x}_${z}.webp`;
+						img.src = `${baseUrl}${31 + x}_${31 + z}.webp`;
 						img.alt = `Mapa ${x},${z}`;
 						img.loading = "lazy";
 						img.draggable = false;
